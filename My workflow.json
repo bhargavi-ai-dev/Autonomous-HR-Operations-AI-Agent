@@ -1,0 +1,179 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.5,
+      "position": [
+        0,
+        0
+      ],
+      "id": "b4638b77-3b58-4ebb-9afc-cb9930fcc3b7",
+      "name": "When chat message received",
+      "webhookId": "f2064889-d796-4534-b444-dca1dc6388d5"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "You are a helpful Company HR Assistant. Use the Google Docs tool to read company policies and answer employee questions. If an employee asks to apply for leave, use the Gmail tool to send a professional leave application email."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        224,
+        0
+      ],
+      "id": "7712ce07-e635-4e01-bdc5-e344958478b3",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-oss-20b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        96,
+        208
+      ],
+      "id": "800f975a-1319-4992-918d-5d3d533dfe68",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "euOUZLNA4U83xPTG",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.4,
+      "position": [
+        240,
+        208
+      ],
+      "id": "1a67e050-fec9-4917-b9aa-25646268969f",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "documentURL": "https://docs.google.com/document/d/1ODu5dLt54qUMnSN6f-3Tp9VRcAhVaf87c5CvcB5jTdY/edit?tab=t.0"
+      },
+      "type": "n8n-nodes-base.googleDocsTool",
+      "typeVersion": 2,
+      "position": [
+        384,
+        208
+      ],
+      "id": "73019383-3fd0-4b99-8cd3-2bcb591d0ca5",
+      "name": "Get a document in Google Docs",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "Z8uXxXLeOpcGej28",
+          "name": "Google Docs account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('To', ``, 'string') }}",
+        "subject": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Subject', ``, 'string') }}",
+        "message": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message', ``, 'string') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.2,
+      "position": [
+        480,
+        206.1484375
+      ],
+      "id": "026fd932-c6ef-4a18-82b4-5e7761577f5d",
+      "name": "Send a message in Gmail",
+      "webhookId": "9782641d-438a-4e2d-9c00-a1cd8b60733f",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "zfxmwpukzyBTRm0r",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get a document in Google Docs": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message in Gmail": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "1323323a-afaf-4721-8db3-45623e37f10c",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "a21e41de6aa7ad9ab2cde817895f5e20d948ae3462916c27dc2dd5c6d4467a58"
+  },
+  "nodeGroups": [],
+  "id": "cjOM5frS9TD6K6xl",
+  "tags": []
+}
